@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /bhada_rates/{bhadaId} {
+      allow read, write: if true;
+    }
+
+    match /reminders/{reminderId} {
+      allow read, write: if true;
+    }
+
+    match /notes/{noteId} {
+      allow read, write: if true;
+    }
+
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    match /system_metadata/{metaId} {
+      allow read, write: if true;
+    }
+
+    // Default deny catch-all for any other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

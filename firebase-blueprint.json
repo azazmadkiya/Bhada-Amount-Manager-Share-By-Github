@@ -1,0 +1,150 @@
+{
+  "entities": {
+    "BhadaRate": {
+      "title": "BhadaRate",
+      "description": "Transport freight rate and trip calculation record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "originCity": { "type": "string", "maxLength": 100 },
+        "originState": { "type": "string", "maxLength": 100 },
+        "destinationCity": { "type": "string", "maxLength": 100 },
+        "destinationState": { "type": "string", "maxLength": 100 },
+        "ratePerUnit": { "type": "number" },
+        "rateUnit": { "type": "string" },
+        "weightTons": { "type": "number" },
+        "totalBhadaAmount": { "type": "number" },
+        "truckNumber": { "type": "string", "maxLength": 50 },
+        "truckType": { "type": "string", "maxLength": 100 },
+        "partyName": { "type": "string", "maxLength": 100 },
+        "lrNumber": { "type": "string", "maxLength": 50 },
+        "loadingDate": { "type": "string", "maxLength": 50 },
+        "materialType": { "type": "string", "maxLength": 100 },
+        "driverName": { "type": "string", "maxLength": 100 },
+        "driverPhone": { "type": "string", "maxLength": 50 },
+        "advanceAmount": { "type": "number" },
+        "dieselAdvance": { "type": "number" },
+        "tollTax": { "type": "number" },
+        "kantaCharges": { "type": "number" },
+        "commissionCharges": { "type": "number" },
+        "detentionCharges": { "type": "number" },
+        "balanceAmount": { "type": "number" },
+        "remarks": { "type": "string", "maxLength": 1000 },
+        "isStarred": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "createdByUserId": { "type": "string" },
+        "createdByName": { "type": "string" },
+        "createdByRole": { "type": "string" },
+        "visibility": { "type": "string" },
+        "allowedUserIds": { "type": "array" },
+        "userAccessRights": { "type": "array" }
+      },
+      "required": ["originCity", "destinationCity", "ratePerUnit", "totalBhadaAmount"]
+    },
+    "Reminder": {
+      "title": "Reminder",
+      "description": "Payment due or transport follow-up reminder",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "reminderType": { "type": "string" },
+        "partyOrTruck": { "type": "string", "maxLength": 100 },
+        "amount": { "type": "number" },
+        "dueDate": { "type": "string" },
+        "dueTime": { "type": "string" },
+        "priority": { "type": "string" },
+        "status": { "type": "string" },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "relatedBhadaId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "completedAt": { "type": "string" },
+        "createdByUserId": { "type": "string" },
+        "createdByName": { "type": "string" },
+        "createdByRole": { "type": "string" },
+        "visibility": { "type": "string" },
+        "allowedUserIds": { "type": "array" },
+        "userAccessRights": { "type": "array" }
+      },
+      "required": ["title", "reminderType", "dueDate", "status", "priority"]
+    },
+    "TransportNote": {
+      "title": "TransportNote",
+      "description": "Transport operational note, rate agreement or rules",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string" },
+        "content": { "type": "string", "maxLength": 5000 },
+        "tags": { "type": "array" },
+        "isPinned": { "type": "boolean" },
+        "colorTag": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "createdByUserId": { "type": "string" },
+        "createdByName": { "type": "string" },
+        "createdByRole": { "type": "string" },
+        "visibility": { "type": "string" },
+        "allowedUserIds": { "type": "array" },
+        "userAccessRights": { "type": "array" }
+      },
+      "required": ["title", "category", "content"]
+    },
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "User profile with role and credentials for transport team access",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "username": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "role": { "type": "string" },
+        "passwordHash": { "type": "string" },
+        "branchLocation": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "lastLoginAt": { "type": "string" }
+      },
+      "required": ["name", "username", "role", "passwordHash"]
+    },
+    "AppMetadata": {
+      "title": "AppMetadata",
+      "description": "Shared application settings, custom commodities and cities",
+      "type": "object",
+      "properties": {
+        "customMaterials": { "type": "array" },
+        "customCities": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/bhada_rates/{bhadaId}": {
+      "schema": "BhadaRate",
+      "description": "Collection of transport bhada rates"
+    },
+    "/reminders/{reminderId}": {
+      "schema": "Reminder",
+      "description": "Collection of transport reminders and dues"
+    },
+    "/notes/{noteId}": {
+      "schema": "TransportNote",
+      "description": "Collection of transport notes"
+    },
+    "/users/{userId}": {
+      "schema": "UserAccount",
+      "description": "Collection of staff and admin accounts"
+    },
+    "/system_metadata/{metaId}": {
+      "schema": "AppMetadata",
+      "description": "Collection of shared commodities, cities, and settings"
+    }
+  }
+}

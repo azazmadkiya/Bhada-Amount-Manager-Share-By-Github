@@ -1,0 +1,8 @@
+{
+  "name": "Remix Bhada Amount Manager Share By Github",
+  "description": "Save city-to-city freight rates, organize transport notes, and set reminders for your delivery and logistics routes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
