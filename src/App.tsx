@@ -53,6 +53,12 @@ import {
 import { 
   PrintReportModal 
 } from './components/PrintReportModal';
+import { 
+  InstallAppModal 
+} from './components/InstallAppModal';
+import { 
+  InstallAppBanner 
+} from './components/InstallAppBanner';
 
 import { 
   BhadaRate, Reminder, TransportNote, TransportItem, UserAccount 
@@ -61,7 +67,7 @@ import {
   INITIAL_BHADA_RATES, INITIAL_REMINDERS, INITIAL_NOTES, INITIAL_USERS 
 } from './data/initialData';
 import { 
-  Send, Bell, FileText, Plus, Sparkles, Filter, CheckCircle2, Shield, Key, Wifi 
+  Send, Bell, FileText, Plus, Sparkles, Filter, CheckCircle2, Shield, Key, Wifi, Smartphone 
 } from 'lucide-react';
 import { 
   testConnection,
@@ -250,6 +256,40 @@ export default function App() {
   const [isRouteHistoryOpen, setIsRouteHistoryOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isPrintReportOpen, setIsPrintReportOpen] = useState(false);
+
+  // Android / PWA Install State
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+  const [isStandalone, setIsStandalone] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (navigator as any).standalone === true
+      );
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsStandalone(true);
+      setDeferredPrompt(null);
+      showToast('🎉 Remix Bhada App successfully installed on your device!');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
 
   // User Security Modals state
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
@@ -716,9 +756,23 @@ export default function App() {
   if (!currentUser) {
     return (
       <>
+        {!isStandalone && (
+          <InstallAppBanner 
+            onOpenInstallModal={() => setIsInstallModalOpen(true)}
+            deferredPrompt={deferredPrompt}
+            isStandalone={isStandalone}
+          />
+        )}
         <LoginScreen
           users={users}
           onLoginSuccess={handleLoginSuccess}
+        />
+        <InstallAppModal
+          isOpen={isInstallModalOpen}
+          onClose={() => setIsInstallModalOpen(false)}
+          deferredPrompt={deferredPrompt}
+          isStandalone={isStandalone}
+          onInstallSuccess={() => showToast('Remix Bhada App installed successfully!')}
         />
         {toastMessage && (
           <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-xs sm:text-sm font-semibold border border-slate-800 animate-in fade-in slide-in-from-bottom-2">
@@ -732,6 +786,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-sans flex flex-col">
+      {/* Top Android Install Banner */}
+      {!isStandalone && (
+        <InstallAppBanner 
+          onOpenInstallModal={() => setIsInstallModalOpen(true)}
+          deferredPrompt={deferredPrompt}
+          isStandalone={isStandalone}
+        />
+      )}
+
       {/* Top Header */}
       <Header
         onOpenBhadaModal={() => {
@@ -754,6 +817,8 @@ export default function App() {
         onOpenUserManagement={() => setIsUserManagementOpen(true)}
         onOpenLogin={() => setIsLoginModalOpen(true)}
         onLogout={handleLogout}
+        onOpenInstallModal={() => setIsInstallModalOpen(true)}
+        isStandalone={isStandalone}
       />
 
       {/* Main Content Area */}
@@ -1127,6 +1192,32 @@ export default function App() {
         targetUser={passwordTargetUser || currentUser}
         currentUser={currentUser}
         onUpdatePassword={handleUpdatePassword}
+      />
+
+      {/* Floating Android Shortcut / Install App Badge */}
+      {!isStandalone && (
+        <button
+          onClick={() => setIsInstallModalOpen(true)}
+          className="fixed bottom-4 left-4 z-40 bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold text-xs py-2.5 px-3.5 rounded-2xl shadow-xl border border-white/20 flex items-center gap-2.5 transition-all transform hover:scale-105 active:scale-95 cursor-pointer no-print group"
+          title="Click to Install Remix Bhada on your Android device"
+        >
+          <div className="w-6 h-6 rounded-lg bg-amber-400 text-blue-950 flex items-center justify-center font-black text-xs shrink-0 shadow-xs">
+            <Smartphone className="w-3.5 h-3.5" />
+          </div>
+          <div className="text-left leading-tight">
+            <span className="block text-[10px] text-blue-200 uppercase tracking-wider font-semibold">Android Shortcut</span>
+            <span className="block font-black text-amber-300 group-hover:text-amber-200">Click To Install App</span>
+          </div>
+        </button>
+      )}
+
+      {/* Install Android & PWA App Modal */}
+      <InstallAppModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+        deferredPrompt={deferredPrompt}
+        isStandalone={isStandalone}
+        onInstallSuccess={() => showToast('Remix Bhada App installed successfully!')}
       />
     </div>
   );

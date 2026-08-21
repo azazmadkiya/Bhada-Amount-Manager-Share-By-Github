@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   FileText, Send, Bell, Plus, Calculator, History, Download, 
-  User, Shield, Key, LogOut, LogIn, ChevronDown 
+  User, Shield, Key, LogOut, LogIn, ChevronDown, Smartphone 
 } from 'lucide-react';
 import { UserAccount } from '../types';
 
@@ -16,6 +16,8 @@ interface HeaderProps {
   onOpenUserManagement: () => void;
   onOpenLogin: () => void;
   onLogout: () => void;
+  onOpenInstallModal: () => void;
+  isStandalone: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -29,6 +31,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenUserManagement,
   onOpenLogin,
   onLogout,
+  onOpenInstallModal,
+  isStandalone,
 }) => {
   return (
     <header className="bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-3.5 sticky top-0 z-30 shadow-xs">
@@ -52,6 +56,18 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Buttons & User Profile Area */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+          {/* Install Android / PWA Shortcut Button */}
+          {!isStandalone && (
+            <button
+              onClick={onOpenInstallModal}
+              title="Click To Install Android App / Create Shortcut"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs font-bold text-blue-900 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 rounded-lg shadow-xs hover:shadow transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Smartphone className="w-4 h-4" />
+              <span>INSTALL APP</span>
+            </button>
+          )}
+
           {/* User Auth & Management Button */}
           {currentUser ? (
             <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200/90 rounded-lg p-1 pr-2">
@@ -154,3 +170,4 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
+

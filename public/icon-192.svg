@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="truckGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#1e40af"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="42" fill="url(#truckGrad)"/>
+  <!-- Truck Body -->
+  <path d="M40 76 h64 v54 h-64 z" fill="#ffffff" />
+  <path d="M104 90 h26 l14 18 v22 h-40 z" fill="#e0e7ff" />
+  <rect x="108" y="96" width="18" height="14" rx="2" fill="#1e3a8a" />
+  <!-- Rupees / Rate Badge -->
+  <circle cx="72" cy="103" r="16" fill="#f59e0b" />
+  <text x="72" y="110" font-size="20" font-family="Arial, sans-serif" font-weight="900" fill="#ffffff" text-anchor="middle">₹</text>
+  <!-- Wheels -->
+  <circle cx="62" cy="132" r="12" fill="#0f172a"/>
+  <circle cx="62" cy="132" r="5" fill="#94a3b8"/>
+  <circle cx="128" cy="132" r="12" fill="#0f172a"/>
+  <circle cx="128" cy="132" r="5" fill="#94a3b8"/>
+</svg>
